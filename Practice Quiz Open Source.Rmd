@@ -1,0 +1,174 @@
+---
+title: "Practice Open Source"
+author: "Yendra Wijayanto"
+date: "2024-04-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+#**Number 1**
+```{r}
+t_test <- function(xbar, miu,stadev, n, alfa, pilihan_uji="upper" ){
+  df <- n-1
+  t_value <- (xbar - miu)/ (stadev/sqrt(n))
+  
+  if (pilihan_uji == "two_sided") {
+    p_value <- 2*pt(abs(t_value), df)
+  } else if (pilihan_uji == "lower") {
+    p_value <- pt(t_value, df)
+  } else if (pilihan_uji == "upper") {
+    p_value <- (1-pt(t_value, df))
+  } else {
+    warning("pilihan Uji yang anda masukkan tidak sesuai")
+  }
+  
+  return(list(p_value = p_value))
+}
+```
+
+#**Number 2**
+```{r}
+xbar = 16
+miu = 16.43
+stadev = 0.8
+n = 15
+alfa = 0.05
+
+
+lower <- t_test(xbar,miu,stadev,n,alfa, pilihan_uji="lower")
+paste("Uji Lower Tail:\n")
+paste("P-Value:", lower$p_value, "\n")
+if(lower$p_value<alfa){
+  print("H0 Ditolak")
+}else{
+  print("H0 Gagal Ditolak")
+}
+
+upper <- t_test(xbar,miu,stadev,n,alfa, pilihan_uji="upper")
+paste("Uji Upper Tail:\n")
+paste("P-Value:", upper$p_value, "\n")
+if(upper$p_value<alfa){
+  print("H0 Ditolak")
+}else{
+  print("H0 Gagal Ditolak")
+}
+
+two_sided <- t_test(xbar,miu,stadev,n,alfa, pilihan_uji="two_sided")
+paste("Uji Two Sided:\n")
+paste("P-Value:", two_sided$p_value, "\n")
+if(two_sided$p_value<alfa){
+  print("H0 Ditolak")
+}else{
+  print("H0 Gagal Ditolak")
+}
+```
+
+
+#**Number 3**
+```{r}
+cek_integer<- function(vector, int) {
+  if(round(int)!=int || is.numeric(vector)!=TRUE){
+    warning("angka yang anda masukkan bukan bilangan bulat")
+  }
+  if(int %in% vector){
+    return(TRUE)
+  }else{
+    return(FALSE)
+  }
+  
+}
+
+
+cek_integer(c(1:100),100.5)
+
+cek_integer(c(1:100),100)
+
+cek_integer(c(1:100),101)
+```
+
+
+#**Number 4**
+```{r}
+library(numbers)
+cek_prima <- function(a){
+  if(isPrime(a)){
+    print("TRUE")
+  }else{
+    print("FALSE")
+  }
+}
+cek_prima(2)
+```
+
+#**Number 5**
+```{r}
+Faktorial <- function(n){
+  if(n==0){
+    return(1)
+  } else{
+    z = 1
+    for(i in 1:n){
+      z = z * i
+    }
+    return(z)
+  }
+}
+Faktorial(3)
+Faktorial(0)
+```
+#**Number 6**
+```{r}
+data("iris")
+p <- iris
+mean_max_scalling <- function(z){
+  xnew <- (z-min(z))/(max(z)-min(z))
+  return(xnew)
+}
+
+Hasil <- mean_max_scalling(p$Sepal.Length)
+Hasil
+library(ggplot2)
+library(ggpubr)
+qqnorm(Hasil)
+ggdensity(Hasil, main="Density Plot")
+
+```
+
+Dari plot diatas dapat diketahui bahwa data hasil scaling berdistribusi normal
+
+#**Number 7**
+```{r}
+p <- iris
+ggplot(p, aes(Species, Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  labs(title = "Boxplot")
+```
+
+#**Number 8**
+```{r}
+data("swiss")
+k <- swiss
+k <- transform(k, IPM = (log(swiss$Education)+log(swiss$Fertility)+log(swiss$Agriculture))^(1/3)*10)
+k
+```
+
+#**Number 9**
+```{r}
+kotadiatasratarata <- subset(k, IPM > mean(k$IPM))
+kotadibawahratarata <- subset(k, IPM <= mean(k$IPM))
+
+summary(kotadiatasratarata)
+summary(kotadibawahratarata)
+
+```
+
+
+
+
+
+
